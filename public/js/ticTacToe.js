@@ -4,7 +4,7 @@ const blankSpace = 0,
 
 let mouse = {
   x: -1,
-  y: -1,
+  y: -1
 }
 
 const cellSize = 150
@@ -40,7 +40,7 @@ canvas.addEventListener('click', function(event) {
 })
 
 function displayTurn() {
-  msg.textContent = ((currentPlayer == X) ? 'X' : 'O') + '\'s turn'
+  msg.textContent = ((currentPlayer === X) ? 'X' : 'O') + '\'s turn'
 }
 
 function playGame(cell) {
@@ -59,11 +59,11 @@ function playGame(cell) {
 
   if (theWinner != 0) {
     gameOver = true
-    msg.textContent = ((currentPlayer == X) ? 'X' : 'O') + ' wins!!'
+    msg.textContent = 'Player ' + ((currentPlayer === X) ? 'X' : 'O') + ' wins!!'
     return
-  } else if (gameBoardValues.indexOf(blankSpace) == -1) {
+  } else if (gameBoardValues.indexOf(blankSpace) === -1) {
     gameOver = true
-    msg.textContent = 'It is a draw!'
+    msg.textContent = 'It\'s a draw!'
     return
   }
 
@@ -75,14 +75,13 @@ function checkWinner(player) {
   let playerMoveBitShift = 0
   for (let k = 0; k < gameBoardValues.length; k++) {
     playerMoveBitShift <<= 1
-    if (gameBoardValues[k] == player) {
+    if (gameBoardValues[k] === player) {
       playerMoveBitShift += 1
-      console.log(playerMoveBitShift)
     }
   }
 
   for (let k = 0; k < winPatterns.length; k++) {
-    if ((playerMoveBitShift & winPatterns[k]) == winPatterns[k]) {
+    if ((playerMoveBitShift & winPatterns[k]) === winPatterns[k]) {
       return winPatterns[k]
     }
   }
