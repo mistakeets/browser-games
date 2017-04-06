@@ -2,12 +2,20 @@ const blankSpace = 0,
   X = 1,
   O = -1
 
+let mouse = {
+  x: -1,
+  y: -1,
+}
+
 const cellSize = 150
+let currentPlayer = X
+let gameOver = false
+
 let canvas = document.getElementById('tictactoe')
 let ctx = canvas.getContext('2d')
 let msg = document.getElementById('message')
 
-let gameBoardValues = [1, 0, 1, -1, 0, 0, 1, 0, -1]
+let gameBoardValues = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 let winPatterns = [
   0b111000000, 0b000111000, 0b000000111,
@@ -16,6 +24,71 @@ let winPatterns = [
 ]
 
 canvas.width = canvas.height = 3 * cellSize
+
+canvas.addEventListener('mouseout', function() {
+  mouse.x = mouse.y = -1
+})
+
+canvas.addEventListener('click', function(event) {
+  let x = event.pageX - canvas.offsetLeft
+  let y = event.pageY - canvas.offsetTop
+
+  mouse.x = x
+  mouse.y = y
+
+  playGame(mouseWhichCell(mouse.x, mouse.y))
+})
+
+function displayTurn() {
+  msg.textContent = ((currentPlayer == X) ? 'X' : 'O') + '\'s turn'
+}
+
+function playGame(cell) {
+  if (gameOver) {
+    return
+  }
+
+  if (gameBoardValues[cell] != blankSpace) {
+    msg.textContent = 'Illegal Move'
+    return
+  }
+
+  gameBoardValues[cell] = currentPlayer
+
+  let theWinner = checkWinner(currentPlayer)
+
+  if (theWinner != 0) {
+    gameOver = true
+    msg.textContent = ((currentPlayer == X) ? 'X' : 'O') + ' wins!!'
+    return
+  } else if (gameBoardValues.indexOf(blankSpace) == -1) {
+    gameOver = true
+    msg.textContent = 'It is a draw!'
+    return
+  }
+
+  currentPlayer *= -1
+  displayTurn()
+}
+
+function checkWinner(player) {
+  let playerMoveBitShift = 0
+  for (let k = 0; k < gameBoardValues.length; k++) {
+    playerMoveBitShift <<= 1
+    if (gameBoardValues[k] == player) {
+      playerMoveBitShift += 1
+      console.log(playerMoveBitShift)
+    }
+  }
+
+  for (let k = 0; k < winPatterns.length; k++) {
+    if ((playerMoveBitShift & winPatterns[k]) == winPatterns[k]) {
+      return winPatterns[k]
+    }
+  }
+
+  return 0
+}
 
 function render() {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -48,18 +121,16 @@ function render() {
   }
 
   function renderGamePiece() {
-    ctx.strokeStyle = 'white'
+    ctx.strokeStyle = 'black'
     ctx.lineWidth = 4
     for (let k = 0; k < gameBoardValues.length; k++) {
       let location = getCellLocation(k)
 
       ctx.save()
       ctx.translate(location.x + cellSize / 2, location.y + cellSize / 2)
-      if (gameBoardValues[k] == 'X') {
-        console.log('are we drawing things?')
+      if (gameBoardValues[k] === 1) {
         drawX()
-      } else if (gameBoardValues[k] == 'O') {
-        console.log('do we get here?')
+      } else if (gameBoardValues[k] === -1) {
         drawO()
       }
       ctx.restore()
@@ -90,8 +161,12 @@ function getCellLocation(cell) {
 
   return {
     'x': x,
-    'y': y
+    'y': y,
   }
+}
+
+function mouseWhichCell(x, y) {
+  return (Math.floor(x / cellSize) % 3) + Math.floor(y / cellSize) * 3
 }
 
 render()
