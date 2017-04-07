@@ -1,7 +1,7 @@
 body {
-  background-color: #071013;
+  background-color: black;
   color: white;
-  font-family: monospace;
+  font-family: Cambria, sans-serif;
 }
 
 .align {
@@ -68,19 +68,19 @@ body {
   background-color: #FF9914;
 }
 
-#blue.hover {
+#blue.flash {
   background-color: #08BDBD;
 }
 
-#green.hover {
+#green.flash {
   background-color: #29BF12;
 }
 
-#red.hover {
+#red.flash {
   background-color: #F21B3F;
 }
 
-#dark.hover {
+#dark.flash {
   background-color: #FF9914;
 }
 

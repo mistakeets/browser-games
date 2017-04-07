@@ -65,10 +65,10 @@ function sound(name) {
 }
 
 function playGame(field) {
-  $(field).addClass('hover');
+  $(field).addClass('flash');
   sound(field);
   setTimeout(function() {
-    $(field).removeClass('hover');
+    $(field).removeClass('flash');
   }, 300);
 }
 
@@ -95,8 +95,7 @@ function playerTurn(x) {
   } else {
     console.log('Good Move!');
     sound(x);
-    let check = game.player.length === game.currentGame.length;
-    if (check) {
+    if (game.player.length === game.currentGame.length) {
       if (game.count == 20) {
         alert('You won! Congrats.');
       } else {
@@ -128,4 +127,4 @@ function addCount() {
   generateMove();
 }
 
-newGame();
+//newGame();
