@@ -1,4 +1,4 @@
-# Browser Games
+# Browser Games (Project Channel #knotty-urial)
 
 A collection of games to play in a web browser. See the full list of games in the [games.md](games.md) file.
 
