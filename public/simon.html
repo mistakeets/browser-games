@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name=viewport content="width=device-width, initial-scale=1">
+  <title>Simon</title>
+  <link rel="stylesheet" href="css/simonmain.css">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.js" integrity="sha256-tA8y0XqiwnpwmOIl3SGAcFl2RvxHjA8qp0+1uCGmRmg=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <div class="container">
+    <div>
+      <center>
+        <h2>Let's Play Simon</h2>
+      </center>
+    </div>
+    <div class="top-row">
+      <div id="blue" class="gamebutton" onClick="addToPlayer(this.id)"></div>
+    </div>
+    <div class="middle-row">
+      <div id="green" class="gamebutton" onClick="addToPlayer(this.id)"></div>
+      <div id="gameNumber">
+        <h2 id="clickNumber">0</h2>
+      </div>
+      <div id="red" class="gamebutton" onClick="addToPlayer(this.id)"></div>
+    </div>
+    <div class="bottom-row">
+      <div id="dark" class="gamebutton" onClick="addToPlayer(this.id)"></div>
+      <div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <br>
+  <br>
+  <div>
+    <center>
+      <div>
+        <button onClick="newGame()"> Click here to Start or Reset the Game!
+        </button>
+        <br>
+        <br>
+        <br>
+        <div>
+          <h4>Strict mode? (Click below to change)</h4>
+          <p class="btn btn-primary text-center" id="strict" onClick="strict()"> Strict Mode is currently Off</p>
+    </center>
+    </div>
+    <script type="text/javascript" src="/js/simon.js"></script>
+</body>
+
+</html>
