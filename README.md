@@ -1,4 +1,4 @@
-# Browser Games
+# Browser Games (Project Channel #knotty-urial)
 
 A collection of games to play in a web browser. See the full list of games in the [games.md](games.md) file.
 
@@ -48,9 +48,9 @@ Your work will be mainly in deciding how to replicate that formal logic and user
 ## Specifications
 
 - [x] Artifact produced is a fork of the [browser-games][browser-games] repo.
-- [ ] For **both** of the games Tic-Tac-Toe and Simon, there exists:
-  - [ ] A playable, complete version of the game at `public/GAME_NAME.html` (e.g. `public/ticTacToe.html`)
-  - [ ] A link to the game page from `public/index.html`
+- [x] For **both** of the games Tic-Tac-Toe and Simon, there exists:
+  - [x] A playable, complete version of the game at `public/GAME_NAME.html` (e.g. `public/ticTacToe.html`)
+  - [x] A link to the game page from `public/index.html`
 - [x] The artifact produced is properly licensed, preferably with the [MIT license][mit-license].
 
 ## Quality Rubric
