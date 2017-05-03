@@ -23,17 +23,18 @@ for (let y = 0; y < this.height; y++) {
   let line = plan[y],
     gridLine = []
   for (let x = 0; x < this.width; x++) {
-    let ch = line[x],
-      fieldtype = null;
+    let char = line[x],
+      fieldType = null;
     let Element = elementCharacters[char]
     if (Element) {
       this.elements.push(new Element(new Vector(x, y), char))
     } else if (char == 'x') {
-      fieldtype = 'wall'
+      fieldType = 'wall'
     } else if (char == '!') {
-      fieldtype = 'lava'
-      gridLine.push(gridLine)
+      fieldType = 'lava'
+      gridLine.push(fieldType)
     }
+    this.grid.push(gridLine)
   }
   this.player = this.elements.filter((element) => {
     return element.type == 'player'
@@ -123,7 +124,7 @@ DOMdisplay.prototype.drawBackground = () => {
   this.level.grid.forEach((row) => {
     let rowElt = table.appendChild(elt('tr'))
     rowElt.style.height = scale + 'px'
-    row.Foreach((type) => {
+    row.ForEach((type) => {
       row.appendChild(elt('td', type))
     })
   })
@@ -178,4 +179,38 @@ DOMdisplay.prototype.scrollPlayerIntoView = () => {
 
 DOMdisplay.prototype.clear = () => {
   this.wrap.parentNode.removeChild(this.wrap)
+}
+
+// motion and collision 
+
+Level.prototype.obsticleAt = (position, size) => {
+  let xStart = Math.floor(position.x)
+  let xEnd = Math.ceil(position.x + size.x)
+  let yStart = Math.floor(position.y)
+  let yEnd = Math.ceil(position.y + size.y)
+
+  if (xStart < 0 || xEnd > this.width || ystart < 0) {
+    return 'wall'
+  }
+  if (yEnd > this.height) {
+    return 'lava'
+  }
+  for (let y = yStart; y < yEnd; y++) {
+    for (let x = xStart; x < xEnd; x++) {
+      let fieldType = this.grid[y][x]
+      if (fieldType) return fieldType
+    }
+  }
+}
+
+Level.prototype.elementAt = (element) => {
+  for (let i = 0; i < this.elements.length; i++) {
+    let other = this.elements[i]
+    if (other != element &&
+      actor.position.x + actor.size.x > other.position.x &&
+      actor.position.x < other.position.x + other.size.x &&
+      actor.position.y + actor.size.y > other.position.y &&
+      actor.position.y < other.position.y + other.size.y)
+      return other
+  }
 }
