@@ -1,6 +1,6 @@
 // levelplan x = wall, @ = player, equal or | = moving laving, o = coin, ! = nonmoving lava
 
-const levelPlan = [
+let simpleLevelPlan = [
   "                      ",
   "                      ",
   "  x              = x  ",
@@ -94,8 +94,8 @@ function Coin(position) {
 }
 Coin.prototype.type = 'coin'
 
-let completeLevel = new Level(levelPlan)
-console.log(completeLevel.width, 'by', completeLevel.height)
+let simpleLevel = new Level(simpleLevelPlan)
+console.log(simpleLevel.width, 'by', simpleLevel.height)
 
 // DRAWING functionality
 // TODO: make this modular? / split level creation and drawing into separate files?
