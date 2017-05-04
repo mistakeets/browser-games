@@ -1,6 +1,6 @@
 .background {
   background: rgb(43, 141, 216);
-  border: 0;
+  border-spacing: 0;
   table-layout: fixed;
 }
 
@@ -10,7 +10,7 @@
 
 .game {
   overflow: hidden;
-  max-width: 640px;
+  max-width: 600px;
   max-height: 450px;
   position: relative;
 }
@@ -40,5 +40,5 @@
 }
 
 .won .player {
-  box-shadow: -4px -7px 8px #ffffff, -4px -7px 8px #ffffff;
+  box-shadow: -4px -7px 8px #ffffff, 4px -7px 8px #ffffff;
 }
