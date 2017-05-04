@@ -207,10 +207,114 @@ Level.prototype.elementAt = (element) => {
   for (let i = 0; i < this.elements.length; i++) {
     let other = this.elements[i]
     if (other != element &&
-      actor.position.x + actor.size.x > other.position.x &&
-      actor.position.x < other.position.x + other.size.x &&
-      actor.position.y + actor.size.y > other.position.y &&
-      actor.position.y < other.position.y + other.size.y)
+      element.position.x + element.size.x > other.position.x &&
+      element.position.x < other.position.x + other.size.x &&
+      element.position.y + element.size.y > other.position.y &&
+      element.position.y < other.position.y + other.size.y)
       return other
+  }
+}
+
+// movement and gravity 
+
+const maxStep = 0.05
+
+Level.prototype.animate = (step, keys) => {
+  if (this.status != null) {
+    this.finishDelay -= step
+  }
+
+  while (step > 0) {
+    let thisStep = Math.min(step, maxStep)
+    this.elements.forEach((element) => {
+      element.action(thisStep, this, keys)
+    }, this)
+    step -= thisStep
+  }
+}
+
+Lava.prototype.action = (step, level) => {
+  let newPosition = this.position.plus(this.speed.times(step))
+  if (!level.obsticleAt(newPosition, this.size)) {
+    this.position = newPosition
+  } else if (this.repeatPosition) {
+    this.position = this.repeatPosition
+  } else {
+    this.speed = this.speed.times(-1)
+  }
+}
+
+const wobbleSpeed = 8
+const wobbleDist = 0.07
+
+Coin.prototype.action = (step) => {
+  this.wobble += step * wobbleSpeed
+  let WobblePosition = Math.sin(this.wobble) * wobbleDist
+  this.position = this.basePosition.plus(new Vector(0, WobblePosition))
+}
+
+const playerXSpeed = 7
+
+Player.prototype.moveX = (step, level, keys) => {
+  this.speed.x = 0
+  if (keys.left) this.speed.x -= playerXSpeed
+  if (keys.right) this.speed.x += playerXSpeed
+
+  let motion = new Vector(this.speed.x * step, 0)
+  let newPosition = this.position.plus(motion)
+  let obsticle = level.obsticleAt(newPosition, this.size)
+  if (obsticle)
+    level.playerTouched(obsticle)
+  else
+    this.position = newPosition
+}
+
+const gravity = 30
+const jumpSpeed = 17
+
+Player.prototype.moveY = (step, level, keys) => {
+  this.speed.y += step * gravity
+  let motion = new Vector(0, this.speed.y * step)
+  let newPosition = this.position.plus(motion)
+  let obsticle = level.obsticleAt(newPosition, this.size)
+  if (obsticle) {
+    level.playerTouched(obsticle)
+    if (keys.up && this.speed.y > 0)
+      this.speed.y = -jumpSpeed
+    else
+      this.speed.y = 0
+  } else {
+    this.position = newPosition
+  }
+}
+
+Player.prototype.action = (step, level, keys) => {
+  this.moveX(step, level, keys)
+  this.moveY(step, level, keys)
+
+  let otherElement = level.elementAt(this)
+  if (otherElement)
+    level.playerTouched(otherElement.type, otherElement)
+
+  if (level.status == 'lost') {
+    this.postion.y += step
+    this.size.y -= step
+  }
+}
+
+Level.prototype.playerTouched = (type, element) => {
+  if (type == 'lava' && this.status == null) {
+    this.status = 'lost'
+    this.finishDelay = 1
+  } else if (type == 'coin') {
+    this.elements = this.elements.filter((other) => {
+      return other != element
+    })
+    if (!this.elements.some((element) => {
+        return element.type = 'coin'
+      })) {
+      this.status = 'won'
+      this.finishDelay = 1
+    }
   }
 }
