@@ -318,3 +318,26 @@ Level.prototype.playerTouched = (type, element) => {
     }
   }
 }
+
+//input handler 
+
+const arrowCodes = {
+  37: 'left',
+  38: 'up',
+  39: 'right'
+}
+
+function inputKeys(codes) {
+  let pressed = Object.create(null)
+
+  function handler(event) {
+    if (codes.hasOwnProperty(event.keyCode)) {
+      let down = event.type == 'keydown'
+      pressed[codes[events.keyCode]] = down
+      event.preventDefault()
+    }
+    addEventListener('keydown', handler)
+    addEventListener('keyup', handler)
+    return pressed
+  }
+}
