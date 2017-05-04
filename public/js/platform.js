@@ -1,65 +1,64 @@
-// levelplan x = wall, @ = player, equal or | = moving laving, o = coin, ! = nonmoving lava
+// levelplan characters are x = wall, @ = player, equal or | = moving laving, o = coin, ! = nonmoving lava
 
-let simpleLevelPlan = [
-  "                      ",
-  "                      ",
-  "  x              = x  ",
-  "  x         o o    x  ",
-  "  x @      xxxxx   x  ",
-  "  xxxxx            x  ",
-  "      x!!!!!!!!!!!!x  ",
-  "      xxxxxxxxxxxxxx  ",
-  "                      "
+var simpleLevelPlan = [
+  '                      ',
+  '                      ',
+  '  x              = x  ',
+  '  x         o o    x  ',
+  '  x @      xxxxx   x  ',
+  '  xxxxx            x  ',
+  '      x!!!!!!!!!!!!x  ',
+  '      xxxxxxxxxxxxxx  ',
+  '                      '
 ]
+
+// Create Level 
 
 function Level(plan) {
   this.width = plan[0].length
   this.height = plan.length
   this.grid = []
-  this.elements = []
-}
+  this.actors = []
 
-for (let y = 0; y < this.height; y++) {
-  let line = plan[y],
-    gridLine = []
-  for (let x = 0; x < this.width; x++) {
-    let char = line[x],
-      fieldType = null;
-    let Element = elementCharacters[char]
-    if (Element) {
-      this.elements.push(new Element(new Vector(x, y), char))
-    } else if (char == 'x') {
-      fieldType = 'wall'
-    } else if (char == '!') {
-      fieldType = 'lava'
+  for (var y = 0; y < this.height; y++) {
+    var line = plan[y]
+    var gridLine = []
+    for (var x = 0; x < this.width; x++) {
+      var char = line[x]
+      var fieldType = null
+      var Actor = actorChars[char]
+      if (Actor)
+        this.actors.push(new Actor(new Vector(x, y), char))
+      else if (char == 'x')
+        fieldType = 'wall'
+      else if (char == '!')
+        fieldType = 'lava'
       gridLine.push(fieldType)
     }
     this.grid.push(gridLine)
   }
-  this.player = this.elements.filter((element) => {
-    return element.type == 'player'
-  })[0]
+  this.player = this.actors.filter(function(actor) {
+    return actor.type == 'player'
+  })[0];
   this.status = this.finishDelay = null
+}
+
+Level.prototype.isFinished = function() {
+  return this.status != null && this.finishDelay < 0
 }
 
 function Vector(x, y) {
   this.x = x
   this.y = y
 }
-
-Level.prototype.isFinished = () => {
-  return this.status != null && this.finishDelay < 0
-}
-
-Vector.prototype.plus = (other) => {
+Vector.prototype.plus = function(other) {
   return new Vector(this.x + other.x, this.y + other.y)
 }
-
-Vector.prototype.times = (factor) => {
+Vector.prototype.times = function(factor) {
   return new Vector(this.x * factor, this.y * factor)
 }
 
-const elementCharacters = {
+var actorChars = {
   '@': Player,
   'o': Coin,
   '=': Lava,
@@ -74,7 +73,7 @@ function Player(position) {
 }
 Player.prototype.type = 'player'
 
-function Lava(postion, char) {
+function Lava(position, char) {
   this.position = position
   this.size = new Vector(1, 1)
   if (char == '=') {
@@ -95,190 +94,184 @@ function Coin(position) {
 }
 Coin.prototype.type = 'coin'
 
-let simpleLevel = new Level(simpleLevelPlan)
-console.log(simpleLevel.width, 'by', simpleLevel.height)
+var simpleLevel = new Level(simpleLevelPlan)
 
-// DRAWING functionality
-// TODO: make this modular? / split level creation and drawing into separate files?
+// Drawing Functionality
 
 function elt(name, className) {
-  let elt = document.createElement(name)
+  var elt = document.createElement(name)
   if (className) elt.className = className
   return elt
 }
 
-function DOMdisplay(parent, level) {
+function DOMDisplay(parent, level) {
   this.wrap = parent.appendChild(elt('div', 'game'))
   this.level = level
 
   this.wrap.appendChild(this.drawBackground())
-  this.elementLayer = null
+  this.actorLayer = null
   this.drawFrame()
 }
 
-const scale = 20
+var scale = 20
 
-DOMdisplay.prototype.drawBackground = () => {
-  let table = elt('table', 'background')
+DOMDisplay.prototype.drawBackground = function() {
+  var table = elt('table', 'background')
   table.style.width = this.level.width * scale + 'px'
-  this.level.grid.forEach((row) => {
-    let rowElt = table.appendChild(elt('tr'))
+  this.level.grid.forEach(function(row) {
+    var rowElt = table.appendChild(elt('tr'))
     rowElt.style.height = scale + 'px'
-    row.ForEach((type) => {
-      row.appendChild(elt('td', type))
+    row.forEach(function(type) {
+      rowElt.appendChild(elt('td', type))
     })
   })
   return table
 }
 
-DOMdisplay.prototype.drawElements = () => {
-  let wrap = elt('div')
-  this.level.elements.forEach((element) => {
-    let rect = wrap.appendChild(elt('div', element + element.type))
-    rect.style.width = element.size.x * scale + 'px'
-    rect.style.height = element.size.y * scale + 'px'
-    rect.style.left = element.position.x * scale + 'px'
-    rect.style.top = element.position.y * scale + 'px'
+DOMDisplay.prototype.drawActors = function() {
+  var wrap = elt('div')
+  this.level.actors.forEach(function(actor) {
+    var rect = wrap.appendChild(elt('div',
+      'actor ' + actor.type))
+    rect.style.width = actor.size.x * scale + 'px'
+    rect.style.height = actor.size.y * scale + 'px'
+    rect.style.left = actor.position.x * scale + 'px'
+    rect.style.top = actor.position.y * scale + 'px'
   })
   return wrap
 }
 
-DOMdisplay.prototype.drawFrame = () => {
-  if (this.elementLayer)
-    this.wrap.removeChild(this.elementLayer)
-  this.elementLayer = this.wrap.appendChild(this.drawElements())
-  this.wrap.className = 'game' + (this.level.status || '')
-  this.scrollPlayerIntoView
+DOMDisplay.prototype.drawFrame = function() {
+  if (this.actorLayer)
+    this.wrap.removeChild(this.actorLayer)
+  this.actorLayer = this.wrap.appendChild(this.drawActors())
+  this.wrap.className = 'game ' + (this.level.status || '')
+  this.scrollPlayerIntoView()
 }
 
-DOMdisplay.prototype.scrollPlayerIntoView = () => {
-  let width = this.wrap.clientWidth
-  let height = this.wrap.clientHeight
-  let margin = width / 3
+DOMDisplay.prototype.scrollPlayerIntoView = function() {
+  var width = this.wrap.clientWidth
+  var height = this.wrap.clientHeight
+  var margin = width / 3
 
-  let left = this.wrap.scrollLeft,
-    right = left + width
-  let top = this.wrap.scrollTop,
-    bottom = top + height
+  // The viewport
+  var left = this.wrap.scrollLeft
+  var right = left + width
+  var top = this.wrap.scrollTop
+  var bottom = top + height
 
-  let player = this.level.player
-  let center = player.position.plus(player.size.times(0.5))
-    .times(scale)
+  var player = this.level.player
+  var center = player.position.plus(player.size.times(0.5))
+    .times(scale);
 
-  if (center.x < left + margin) {
+  if (center.x < left + margin)
     this.wrap.scrollLeft = center.x - margin
-  } else if (center.x > right - margin) {
+  else if (center.x > right - margin)
     this.wrap.scrollLeft = center.x + margin - width
-  }
-  if (center.y < top.margin) {
+  if (center.y < top + margin)
     this.wrap.scrollTop = center.y - margin
-  } else if (center.y > bottom - margin) {
+  else if (center.y > bottom - margin)
     this.wrap.scrollTop = center.y + margin - height
-  }
 }
 
-DOMdisplay.prototype.clear = () => {
+DOMDisplay.prototype.clear = function() {
   this.wrap.parentNode.removeChild(this.wrap)
 }
 
-// motion and collision 
+// collision and general movement 
 
-Level.prototype.obsticleAt = (position, size) => {
-  let xStart = Math.floor(position.x)
-  let xEnd = Math.ceil(position.x + size.x)
-  let yStart = Math.floor(position.y)
-  let yEnd = Math.ceil(position.y + size.y)
+Level.prototype.obstacleAt = function(position, size) {
+  var xStart = Math.floor(position.x)
+  var xEnd = Math.ceil(position.x + size.x)
+  var yStart = Math.floor(position.y)
+  var yEnd = Math.ceil(position.y + size.y)
 
-  if (xStart < 0 || xEnd > this.width || ystart < 0) {
+  if (xStart < 0 || xEnd > this.width || yStart < 0)
     return 'wall'
-  }
-  if (yEnd > this.height) {
+  if (yEnd > this.height)
     return 'lava'
-  }
-  for (let y = yStart; y < yEnd; y++) {
-    for (let x = xStart; x < xEnd; x++) {
-      let fieldType = this.grid[y][x]
+  for (var y = yStart; y < yEnd; y++) {
+    for (var x = xStart; x < xEnd; x++) {
+      var fieldType = this.grid[y][x]
       if (fieldType) return fieldType
     }
   }
 }
 
-Level.prototype.elementAt = (element) => {
-  for (let i = 0; i < this.elements.length; i++) {
-    let other = this.elements[i]
-    if (other != element &&
-      element.position.x + element.size.x > other.position.x &&
-      element.position.x < other.position.x + other.size.x &&
-      element.position.y + element.size.y > other.position.y &&
-      element.position.y < other.position.y + other.size.y)
+Level.prototype.actorAt = function(actor) {
+  for (var i = 0; i < this.actors.length; i++) {
+    var other = this.actors[i]
+    if (other != actor &&
+      actor.position.x + actor.size.x > other.position.x &&
+      actor.position.x < other.position.x + other.size.x &&
+      actor.position.y + actor.size.y > other.position.y &&
+      actor.position.y < other.position.y + other.size.y)
       return other
   }
 }
 
-// movement and gravity 
+// More movement, speed, gravity 
 
-const maxStep = 0.05
+var maxStep = 0.05
 
-Level.prototype.animate = (step, keys) => {
-  if (this.status != null) {
+Level.prototype.animate = function(step, keys) {
+  if (this.status != null)
     this.finishDelay -= step
-  }
 
   while (step > 0) {
-    let thisStep = Math.min(step, maxStep)
-    this.elements.forEach((element) => {
-      element.action(thisStep, this, keys)
+    var thisStep = Math.min(step, maxStep)
+    this.actors.forEach(function(actor) {
+      actor.act(thisStep, this, keys)
     }, this)
     step -= thisStep
   }
 }
 
-Lava.prototype.action = (step, level) => {
-  let newPosition = this.position.plus(this.speed.times(step))
-  if (!level.obsticleAt(newPosition, this.size)) {
+Lava.prototype.act = function(step, level) {
+  var newPosition = this.position.plus(this.speed.times(step))
+  if (!level.obstacleAt(newPosition, this.size))
     this.position = newPosition
-  } else if (this.repeatPosition) {
+  else if (this.repeatPosition)
     this.position = this.repeatPosition
-  } else {
+  else
     this.speed = this.speed.times(-1)
-  }
 }
 
-const wobbleSpeed = 8
-const wobbleDist = 0.07
+var wobbleSpeed = 8
+var wobbleDist = 0.07
 
-Coin.prototype.action = (step) => {
+Coin.prototype.act = function(step) {
   this.wobble += step * wobbleSpeed
-  let WobblePosition = Math.sin(this.wobble) * wobbleDist
-  this.position = this.basePosition.plus(new Vector(0, WobblePosition))
+  var wobblePosition = Math.sin(this.wobble) * wobbleDist
+  this.position = this.basePosition.plus(new Vector(0, wobblePosition))
 }
 
-const playerXSpeed = 7
+var playerXSpeed = 7
 
-Player.prototype.moveX = (step, level, keys) => {
+Player.prototype.moveX = function(step, level, keys) {
   this.speed.x = 0
   if (keys.left) this.speed.x -= playerXSpeed
   if (keys.right) this.speed.x += playerXSpeed
 
-  let motion = new Vector(this.speed.x * step, 0)
-  let newPosition = this.position.plus(motion)
-  let obsticle = level.obsticleAt(newPosition, this.size)
-  if (obsticle)
-    level.playerTouched(obsticle)
+  var motion = new Vector(this.speed.x * step, 0)
+  var newPosition = this.position.plus(motion)
+  var obstacle = level.obstacleAt(newPosition, this.size)
+  if (obstacle)
+    level.playerTouched(obstacle)
   else
     this.position = newPosition
 }
 
-const gravity = 30
-const jumpSpeed = 17
+var gravity = 30
+var jumpSpeed = 17
 
-Player.prototype.moveY = (step, level, keys) => {
+Player.prototype.moveY = function(step, level, keys) {
   this.speed.y += step * gravity
-  let motion = new Vector(0, this.speed.y * step)
-  let newPosition = this.position.plus(motion)
-  let obsticle = level.obsticleAt(newPosition, this.size)
-  if (obsticle) {
-    level.playerTouched(obsticle)
+  var motion = new Vector(0, this.speed.y * step)
+  var newPosition = this.position.plus(motion)
+  var obstacle = level.obstacleAt(newPosition, this.size)
+  if (obstacle) {
+    level.playerTouched(obstacle)
     if (keys.up && this.speed.y > 0)
       this.speed.y = -jumpSpeed
     else
@@ -288,30 +281,30 @@ Player.prototype.moveY = (step, level, keys) => {
   }
 }
 
-Player.prototype.action = (step, level, keys) => {
+Player.prototype.act = function(step, level, keys) {
   this.moveX(step, level, keys)
   this.moveY(step, level, keys)
 
-  let otherElement = level.elementAt(this)
-  if (otherElement)
-    level.playerTouched(otherElement.type, otherElement)
+  var otherActor = level.actorAt(this)
+  if (otherActor)
+    level.playerTouched(otherActor.type, otherActor)
 
   if (level.status == 'lost') {
-    this.postion.y += step
+    this.position.y += step
     this.size.y -= step
   }
 }
 
-Level.prototype.playerTouched = (type, element) => {
+Level.prototype.playerTouched = function(type, actor) {
   if (type == 'lava' && this.status == null) {
     this.status = 'lost'
     this.finishDelay = 1
   } else if (type == 'coin') {
-    this.elements = this.elements.filter((other) => {
-      return other != element
+    this.actors = this.actors.filter(function(other) {
+      return other != actor
     })
-    if (!this.elements.some((element) => {
-        return element.type = 'coin'
+    if (!this.actors.some(function(actor) {
+        return actor.type == 'coin'
       })) {
       this.status = 'won'
       this.finishDelay = 1
@@ -319,39 +312,35 @@ Level.prototype.playerTouched = (type, element) => {
   }
 }
 
-//input handler 
+// Input handler 
 
-const arrowCodes = {
-  37: 'left',
-  38: 'up',
-  39: 'right'
-}
+var arrowCodes = { 37: 'left', 38: 'up', 39: 'right' }
 
-function inputKeys(codes) {
-  let pressed = Object.create(null)
+function trackKeys(codes) {
+  var pressed = Object.create(null)
 
   function handler(event) {
     if (codes.hasOwnProperty(event.keyCode)) {
-      let down = event.type == 'keydown'
-      pressed[codes[events.keyCode]] = down
+      var down = event.type == 'keydown'
+      pressed[codes[event.keyCode]] = down
       event.preventDefault()
     }
-    addEventListener('keydown', handler)
-    addEventListener('keyup', handler)
-    return pressed
   }
+  addEventListener('keydown', handler)
+  addEventListener('keyup', handler)
+  return pressed
 }
 
-// make the game run
+// Startup the game 
 
-function runAnimation(frameFunction) {
-  let lastTime = null
+function runAnimation(frameFunc) {
+  var lastTime = null
 
   function frame(time) {
-    let stop = false
-    if (lastTime = null) {
-      let timeStep = Math.min(time - lastTime, 100) / 1000
-      stop = frameFunction(timeStep) === false
+    var stop = false
+    if (lastTime != null) {
+      var timeStep = Math.min(time - lastTime, 100) / 1000
+      stop = frameFunc(timeStep) === false
     }
     lastTime = time
     if (!stop)
@@ -360,11 +349,11 @@ function runAnimation(frameFunction) {
   requestAnimationFrame(frame)
 }
 
-let arrows = inputKeys(arrowCodes)
+var arrows = trackKeys(arrowCodes)
 
 function runLevel(level, Display, andThen) {
-  let display = new Display(document.body, level)
-  runAnimation((step) => {
+  var display = new Display(document.body, level)
+  runAnimation(function(step) {
     level.animate(step, arrows)
     display.drawFrame(step)
     if (level.isFinished()) {
@@ -378,13 +367,13 @@ function runLevel(level, Display, andThen) {
 
 function runGame(plans, Display) {
   function startLevel(n) {
-    runeLevel(new Level(plans[n]), Display, function(status) {
+    runLevel(new Level(plans[n]), Display, function(status) {
       if (status == 'lost')
         startLevel(n)
       else if (n < plans.length - 1)
         startLevel(n + 1)
       else
-        console.log('You Win!')
+        console.log('You win!')
     })
   }
   startLevel(0)
