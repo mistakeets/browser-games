@@ -60,3 +60,49 @@ Piece.prototype.draw = function() {
   }
   ctx.fillStyle = fStyle
 }
+
+Piece.prototype.down = function() {
+  this.undraw()
+  this.y++
+    this.draw()
+}
+
+Piece.prototype.moveRight = function() {
+  this.undraw()
+  this.x++
+    this.draw()
+}
+
+Piece.prototype.moveLeft = function() {
+  this.undraw()
+  this.x--
+    this.draw()
+}
+
+Piece.prototype.rotate = function() {
+  this.undraw()
+  this.patterni = (this.patterni + 1) % this.patterns.length
+}
+
+Piece.prototype._fill = function(color) {
+  fStyle = ctx.fillStyle
+  ctx.fillStyle = color
+  var x = this.x
+  var y = this.y
+  for (var ix = 0; ix < this.pattern.length; ix++) {
+    for (var iy = 0; iy < this.pattern.length; iy++) {
+      if (this.pattern[ix][iy]) {
+        drawSquare(x + ix, y + iy)
+      }
+    }
+  }
+  ctx.fillStyle = fStyle
+}
+
+Piece.prototype.undraw = function(ctx) {
+  this._fill("black")
+}
+
+Piece.prototype.draw = function() {
+  this._fill(this.color)
+}
