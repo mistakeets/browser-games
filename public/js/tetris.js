@@ -159,4 +159,4 @@ document.body.addEventListener('keypress', function(event) {
     piece.moveRight()
     dropStart = Date.now()
   }
-})
+}, false)
