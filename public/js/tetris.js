@@ -141,3 +141,22 @@ Piece.prototype._collides = function(dx, dy, pat) {
   }
   return false
 }
+
+var dropStart = Date.now()
+document.body.addEventListener('keypress', function(event) {
+  if (event.keyCode == 38) {
+    piece.rotate()
+    dropStart = Date.now()
+  }
+  if (event.keyCode == 40) {
+    piece.down()
+  }
+  if (event.keyCode == 37) {
+    piece.moveLeft()
+    dropStart = Date.now()
+  }
+  if (event.keyCode == 39) {
+    piece.moveRight()
+    dropStart = Date.now()
+  }
+}, false)
