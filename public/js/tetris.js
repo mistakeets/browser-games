@@ -62,26 +62,39 @@ Piece.prototype.draw = function() {
 }
 
 Piece.prototype.down = function() {
-  this.undraw()
-  this.y++
-    this.draw()
+  if (this._collides(0, 1, this.pattern)) {
+
+  } else {
+    this.undraw()
+    this.y++
+      this.draw()
+  }
 }
 
 Piece.prototype.moveRight = function() {
-  this.undraw()
-  this.x++
-    this.draw()
+  if (!this._collides(1, 0, this.pattern)) {
+    this.undraw()
+    this.x++
+      this.draw()
+  }
 }
 
 Piece.prototype.moveLeft = function() {
-  this.undraw()
-  this.x--
-    this.draw()
+  if (!this.collides(-1, 0, this.pattern)) {
+    this.undraw()
+    this.x--
+      this.draw()
+  }
 }
 
 Piece.prototype.rotate = function() {
-  this.undraw()
-  this.patterni = (this.patterni + 1) % this.patterns.length
+  var nextPat = this.patterns[(this.patterni + 1) % this.patterns.length]
+  if (!this._collides(0, 0, nextPat)) {
+    this.undraw()
+    this.patterni = (this.patterni + 1) % this.patterns.length
+    this.pattern = this.patterns[this.patterni]
+    this.draw()
+  }
 }
 
 Piece.prototype._fill = function(color) {
@@ -105,4 +118,26 @@ Piece.prototype.undraw = function(ctx) {
 
 Piece.prototype.draw = function() {
   this._fill(this.color)
+}
+
+Piece.prototype._collides = function(dx, dy, pat) {
+  for (ix = 0; ix < pat.length; ix++) {
+    for (iy = 0; iy < path.length; iy++) {
+      if (!pat[ix][iy]) {
+        continue
+      }
+      var x = this.x + ix + dx
+      var y = this.y + iy + dx
+      if (y >= height || x < 0 || x > width) {
+        return true
+      }
+      if (y < 0) {
+        continue
+      }
+      if (board[y][x]) {
+        return true
+      }
+    }
+  }
+  return false
 }
