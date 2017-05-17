@@ -185,23 +185,38 @@ var pieces = [
 var piece = null
 
 var dropStart = Date.now()
-document.body.addEventListener('keypress', function(event) {
-  if (event.keyCode == 38) {
+var downI = {};
+document.body.addEventListener("keydown", function(event) {
+  if (downI[event.keyCode] !== null) {
+    clearInterval(downI[event.keyCode]);
+  }
+  key(event.keyCode);
+  downI[event.keyCode] = setInterval(key.bind(this, event.keyCode), 200);
+}, false);
+document.body.addEventListener("keyup", function(event) {
+  if (downI[event.keyCode] !== null) {
+    clearInterval(downI[event.keyCode]);
+  }
+  downI[event.keyCode] = null;
+}, false);
+
+function key(kPress) {
+  if (kPress == 38) {
     piece.rotate()
     dropStart = Date.now()
   }
-  if (event.keyCode == 40) {
+  if (kPress == 40) {
     piece.down()
   }
-  if (event.keyCode == 37) {
+  if (kPress == 37) {
     piece.moveLeft()
     dropStart = Date.now()
   }
-  if (event.keyCode == 39) {
+  if (kPress == 39) {
     piece.moveRight()
     dropStart = Date.now()
   }
-}, false)
+}
 
 function drawBoard(x, y) {
   fStyle = ctx.fillStyle
