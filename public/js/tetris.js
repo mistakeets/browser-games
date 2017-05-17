@@ -16,6 +16,11 @@ for (var row = 0; row < 20; row++) {
   }
 }
 
+function newPiece() {
+  var p = pieces[parseInt(Math.random() * pieces.length, 10)]
+  return new Piece(p[0], p[1])
+}
+
 function drawSquare(x, y) {
   ctx.fillRect = (x * tilesZ, y * tilesZ, tilesZ, tilesZ)
   sStyle = ctx.strokeStyle
@@ -184,6 +189,16 @@ Piece.prototype._collides = function(dx, dy, pat) {
   }
   return false
 }
+
+var pieces = [
+  [I, 'cyan'],
+  [J, 'blue'],
+  [L, 'orange'],
+  [O, 'yellow'],
+  [S, 'green'],
+  [T, 'purple'],
+  [Z, 'red']
+]
 
 var dropStart = Date.now()
 document.body.addEventListener('keypress', function(event) {
