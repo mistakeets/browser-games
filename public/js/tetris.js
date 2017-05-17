@@ -92,7 +92,7 @@ Piece.prototype.lock = function() {
         done = true
         return
       }
-      board[this.y + iy][this.x + ix] = true
+      board[this.y + iy][this.x + ix] = this.color
     }
   }
   var nlines = 0
@@ -199,7 +199,7 @@ function drawBoard(x, y) {
   fStyle = ctx.fillStyle
   for (var y = 0; y < height; y++) {
     for (var x = 0; x < width; x++) {
-      ctx.fillStyle = board[y][x] ? 'red' : 'white'
+      ctx.fillStyle = board[y][x] || 'white'
       drawSquare(x, y, tilesZ, tilesZ)
     }
   }
