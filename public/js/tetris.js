@@ -68,7 +68,8 @@ Piece.prototype.draw = function() {
 
 Piece.prototype.down = function() {
   if (this._collides(0, 1, this.pattern)) {
-
+    this.lock()
+    piece = newPiece()
   } else {
     this.undraw()
     this.y++
@@ -170,7 +171,7 @@ Piece.prototype.draw = function() {
 
 Piece.prototype._collides = function(dx, dy, pat) {
   for (ix = 0; ix < pat.length; ix++) {
-    for (iy = 0; iy < path.length; iy++) {
+    for (iy = 0; iy < pat.length; iy++) {
       if (!pat[ix][iy]) {
         continue
       }
@@ -199,6 +200,7 @@ var pieces = [
   [T, 'purple'],
   [Z, 'red']
 ]
+var piece = null
 
 var dropStart = Date.now()
 document.body.addEventListener('keypress', function(event) {
@@ -233,4 +235,7 @@ function main() {
     requestAnimationFrame(main)
   }
 }
+
+piece = newPiece()
+drawBoard()
 main()
