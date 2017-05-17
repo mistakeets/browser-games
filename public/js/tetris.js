@@ -4,15 +4,15 @@ var linecount = document.getElementById('lines')
 var width = 10
 var height = 20
 var tilesZ = 24
-
+var clear = window.getComputedStyle(canvas).getPropertyValue('background-color')
 canvas.width = width * tilesZ
 canvas.height = height * tilesZ
 
 var board = []
-for (var row = 0; row < 20; row++) {
+for (var row = 0; row < height; row++) {
   board[row] = []
-  for (var tile = 0; tile < 10; tile++) {
-    board[row][tile] = false
+  for (var tile = 0; tile < width; tile++) {
+    board[row][tile] = ""
   }
 }
 
@@ -22,12 +22,12 @@ function newPiece() {
 }
 
 function drawSquare(x, y) {
-  ctx.fillRect = (x * tilesZ, y * tilesZ, tilesZ, tilesZ)
+  ctx.fillRect(x * tilesZ, y * tilesZ, tilesZ, tilesZ)
   var sStyle = ctx.strokeStyle
   ctx.strokeStyle = '#555'
   ctx.strokeRect(x * tilesZ, y * tilesZ, tilesZ, tilesZ)
   ctx.strokeStyle = '#888'
-  ctx.strokeRect(x * tilesZ + 3 * tilesZ / 8, y * tilesZ + 3 * tilesZ / 8, tilesZ / 4, tilesZ / 4)
+    //ctx.strokeRect(x * tilesZ + 3 * tilesZ / 8, y * tilesZ + 3 * tilesZ / 8, tilesZ / 4, tilesZ / 4)
   ctx.strokeStyle = sStyle
 }
 
@@ -35,10 +35,8 @@ function Piece(patterns, color) {
   this.pattern = patterns[0]
   this.patterns = patterns
   this.patterni = 0
-
   this.color = color
-
-  this.x = 0
+  this.x = width / 2 - parseInt(Math.ceil(this.pattern.length / 2), 10)
   this.y = -2
 }
 
@@ -62,7 +60,7 @@ Piece.prototype.moveRight = function() {
 }
 
 Piece.prototype.moveLeft = function() {
-  if (!this.collides(-1, 0, this.pattern)) {
+  if (!this._collides(-1, 0, this.pattern)) {
     this.undraw()
     this.x--
       this.draw()
@@ -96,8 +94,9 @@ Piece.prototype.lock = function() {
         continue
       }
       if (this.y + iy < 0) {
-        alert("You are done!")
+        alert("Game Over!")
         done = true
+        newGame()
         return
       }
       board[this.y + iy][this.x + ix] = this.color
@@ -107,16 +106,16 @@ Piece.prototype.lock = function() {
   for (var y = 0; y < height; y++) {
     var line = true
     for (var x = 0; x < width; x++) {
-      line = line && !board[y][x] !== '';
+      line = line && board[y][x] !== "";
     }
     if (line) {
-      for (var y2 = 0; y2 > 1; y2--) {
+      for (var y2 = y; y2 > 1; y2--) {
         for (var x = 0; x < width; x++) {
           board[y2][x] = board[y2 - 1][x]
         }
       }
       for (var x = 0; x < width; x++) {
-        board[0][x] = false;
+        board[0][x] = "";
       }
       nlines++
     }
@@ -144,13 +143,15 @@ Piece.prototype._fill = function(color) {
 }
 
 Piece.prototype.undraw = function(ctx) {
-  this._fill("black")
+  this._fill(clear)
 }
 
 Piece.prototype.draw = function(ctx) {
   this._fill(this.color)
 }
 
+var WALL = 1
+var BLOCK = 2
 Piece.prototype._collides = function(dx, dy, pat) {
   for (ix = 0; ix < pat.length; ix++) {
     for (iy = 0; iy < pat.length; iy++) {
@@ -158,19 +159,19 @@ Piece.prototype._collides = function(dx, dy, pat) {
         continue
       }
       var x = this.x + ix + dx
-      var y = this.y + iy + dx
+      var y = this.y + iy + dy
       if (y >= height || x < 0 || x > width) {
-        return true
+        return WALL
       }
       if (y < 0) {
         continue
       }
-      if (board[y][x]) {
-        return true
+      if (board[y][x] !== "") {
+        return BLOCK
       }
     }
   }
-  return false
+  return 0
 }
 
 var pieces = [
@@ -188,17 +189,17 @@ var dropStart = Date.now()
 var downI = {};
 document.body.addEventListener("keydown", function(event) {
   if (downI[event.keyCode] !== null) {
-    clearInterval(downI[event.keyCode]);
+    clearInterval(downI[event.keyCode])
   }
   key(event.keyCode);
   downI[event.keyCode] = setInterval(key.bind(this, event.keyCode), 200);
 }, false);
 document.body.addEventListener("keyup", function(event) {
   if (downI[event.keyCode] !== null) {
-    clearInterval(downI[event.keyCode]);
+    clearInterval(downI[event.keyCode])
   }
-  downI[event.keyCode] = null;
-}, false);
+  downI[event.keyCode] = null
+}, false)
 
 function key(kPress) {
   if (kPress == 38) {
@@ -218,11 +219,11 @@ function key(kPress) {
   }
 }
 
-function drawBoard(x, y) {
+function drawBoard() {
   fStyle = ctx.fillStyle
   for (var y = 0; y < height; y++) {
     for (var x = 0; x < width; x++) {
-      ctx.fillStyle = board[y][x] || 'white'
+      ctx.fillStyle = board[y][x] || clear
       drawSquare(x, y, tilesZ, tilesZ)
     }
   }
@@ -240,6 +241,10 @@ function main() {
   if (!done) {
     requestAnimationFrame(main)
   }
+}
+
+function newGame() {
+  location.reload()
 }
 
 piece = newPiece()
