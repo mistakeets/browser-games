@@ -1,5 +1,6 @@
 var canvas = document.getElementById('board')
 var ctx = canvas.getContext('2d')
+var linecount = document.getElementById('lines')
 var width = 10
 var height = 20
 var tilesZ = 24
@@ -123,7 +124,7 @@ Piece.prototype.lock = function() {
   if (nlines > 0) {
     lines += nlines
     drawBoard()
-    console.log(lines)
+    linecount.textContent = "Lines: " + lines
   }
 }
 
