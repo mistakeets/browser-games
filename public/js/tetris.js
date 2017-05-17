@@ -124,7 +124,7 @@ Piece.prototype.lock = function() {
   if (nlines > 0) {
     lines += nlines
     drawBoard()
-    console.log(lines)
+    linecount.textContent = "Lines: " + lines
   }
 }
 
