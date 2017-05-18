@@ -27,7 +27,6 @@ function drawSquare(x, y) {
   ctx.strokeStyle = '#555'
   ctx.strokeRect(x * tilesZ, y * tilesZ, tilesZ, tilesZ)
   ctx.strokeStyle = '#888'
-    //ctx.strokeRect(x * tilesZ + 3 * tilesZ / 8, y * tilesZ + 3 * tilesZ / 8, tilesZ / 4, tilesZ / 4)
   ctx.strokeStyle = sStyle
 }
 
