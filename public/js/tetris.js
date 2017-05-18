@@ -1,6 +1,7 @@
 var canvas = document.getElementById('board')
 var ctx = canvas.getContext('2d')
 var linecount = document.getElementById('lines')
+var scorecount = document.getElementById('score')
 var clear = window.getComputedStyle(canvas).getPropertyValue('background-color')
 var width = 10
 var height = 20
@@ -111,6 +112,7 @@ Piece.prototype.moveLeft = function() {
 }
 
 var lines = 0
+var points = 0
 var done = false
 Piece.prototype.lock = function() {
   for (var ix = 0; ix < this.pattern.length; ix++) {
@@ -149,6 +151,19 @@ Piece.prototype.lock = function() {
     lines += nlines
     drawBoard()
     linecount.textContent = "Lines: " + lines
+    if (nlines == 1) {
+      points += 40
+    }
+    if (nlines == 2) {
+      points += 100
+    }
+    if (nlines == 3) {
+      points += 300
+    }
+    if (nlines == 4) {
+      points += 1200
+    }
+    scorecount.textContent = "Score: " + points
   }
 }
 

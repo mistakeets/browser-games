@@ -14,13 +14,21 @@ html {
   background: white;
 }
 
-#lines {
+#lines,
+#score {
+  color: #444444;
   display: block;
-  width: 240px;
   margin: 0 auto;
-  margin-top: 2em;
-  color: #444;
+  width: 240px;
   font-size: 1.5em;
+}
+
+#lines {
+  margin-top: 2em;
+}
+
+#score {
+  margin-top: 0em;
 }
 
 .NewGameBtn {
