@@ -210,7 +210,7 @@ $(document).ready(function() {
     }
   })
 
-  $("#NewGameBtn").click(function() {
+  $(".NewGameBtn").click(function() {
     location.reload(true)
   })
 })

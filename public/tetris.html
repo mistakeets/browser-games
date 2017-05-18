@@ -5,14 +5,20 @@
   <meta charset="utf-8">
   <title>Tetris</title>
   <link rel="stylesheet" href="css/tetrismain.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Quicksand">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 
 <body>
-  <span id="lines">Lines: 0</span>
-  <div class="buttons">
-    <button id="NewGameBtn" type="button" value="New Game">New Game</button>
-  </div>
+  <center>
+    <span id="lines">Lines: 0</span>
+    <span id="score">Score: 0</span>
+    <br>
+    <div class="buttons">
+      <button class="NewGameBtn" type="button" value="New Game">New Game</button>
+    </div>
+  </center>
+  <br>
   <canvas id="board"></canvas>
   <script src="js/tetrominoes.js"></script>
   <script src="js/tetris.js"></script>
