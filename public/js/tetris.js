@@ -122,7 +122,7 @@ Piece.prototype.lock = function() {
       }
 
       if (this.y + iy < 0) {
-        alert("Game Over!")
+        alert("Game Over\n\nYour Score: " + points)
         done = true
         return
       }
