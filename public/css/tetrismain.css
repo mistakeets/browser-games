@@ -18,3 +18,26 @@ html {
   color: #444;
   font-size: 1.5em;
 }
+
+.NewGameBtn {
+  background-color: #04202A;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 7px #999999;
+  color: #FFFFFF;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  margin: 4px 2px;
+  outline: none;
+  padding: 8px 12px;
+  text-align: center;
+}
+
+.NewGameBtn:hover {
+  background-color: #4b6d47;
+}
+
+.NewGameBtn:active {
+  box-shadow: 0 4px #454745;
+  transform: translateY(3px);
+}
