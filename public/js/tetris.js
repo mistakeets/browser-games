@@ -12,8 +12,8 @@ canvas.height = height * tilesZ
 var board = []
 for (var row = 0; row < height; row++) {
   board[row] = []
-  for (var col = 0; col < width; col++) {
-    board[row][col] = ""
+  for (var cell = 0; cell < width; cell++) {
+    board[row][cell] = ""
   }
 }
 
@@ -44,13 +44,13 @@ function Piece(patterns, color) {
 
 Piece.prototype.rotate = function() {
   var nudge = 0;
-  var nextpat = this.patterns[(this.patterni + 1) % this.patterns.length]
+  var nextPat = this.patterns[(this.patterni + 1) % this.patterns.length]
 
-  if (this._collides(0, 0, nextpat)) {
+  if (this._collides(0, 0, nextPat)) {
     nudge = this.x > width / 2 ? -1 : 1
   }
 
-  if (!this._collides(nudge, 0, nextpat)) {
+  if (!this._collides(nudge, 0, nextPat)) {
     this.undraw()
     this.x += nudge
     this.patterni = (this.patterni + 1) % this.patterns.length
@@ -65,7 +65,7 @@ Piece.prototype._collides = function(dx, dy, pat) {
   for (var ix = 0; ix < pat.length; ix++) {
     for (var iy = 0; iy < pat.length; iy++) {
       if (!pat[ix][iy]) {
-        continue;
+        continue
       }
 
       var x = this.x + ix + dx
