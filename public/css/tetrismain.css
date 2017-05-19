@@ -14,8 +14,8 @@ html {
   background: white;
 }
 
-#lines,
-#score {
+.lines,
+.score {
   color: #444444;
   display: block;
   margin: 0 auto;
@@ -23,11 +23,11 @@ html {
   font-size: 1.5em;
 }
 
-#lines {
+.lines {
   margin-top: 2em;
 }
 
-#score {
+.score {
   margin-top: 0em;
 }
 
