@@ -148,6 +148,7 @@ Piece.prototype.lock = function() {
   if (nlines > 0) {
     lines += nlines
     drawBoard()
+    levelUp()
     $('.lines').text('Lines: ' + lines)
     if (nlines == 1) {
       points += 40
@@ -239,11 +240,61 @@ function drawBoard() {
   ctx.fillStyle = fStyle
 }
 
+var gameLevel = 1
+var levelTime = 1000
+
+function levelUp() {
+  console.log("LEVEL UP!")
+  console.log(gameLevel)
+  console.log(levelTime)
+  if (lines < 1) {
+    gameLevel = 1
+    levelTime = 1000
+  }
+  if (lines > 1) {
+    gameLevel = 2
+    levelTime = 950
+  }
+  if (lines > 2) {
+    gameLevel = 3
+    levelTime = 925
+  }
+  if (lines > 3) {
+    gameLevel = 4
+    levelTime = 900
+  }
+  if (lines > 4) {
+    gameLevel = 5
+    levelTime = 875
+  }
+  if (lines > 5) {
+    gameLevel = 6
+    levelTime = 850
+  }
+  if (lines > 6) {
+    gameLevel = 7
+    levelTime = 825
+  }
+  if (lines > 7) {
+    gameLevel = 8
+    levelTime = 800
+  }
+  if (lines > 8) {
+    gameLevel = 9
+    levelTime = 750
+  }
+  if (lines > 9) {
+    gameLevel = 10
+    levelTime = 700
+  }
+  $('.level').text('Level: ' + gameLevel)
+}
+
 function main() {
   var now = Date.now()
   var delta = now - dropStart
 
-  if (delta > 1000) {
+  if (delta > levelTime) {
     piece.down()
     dropStart = now
   }
