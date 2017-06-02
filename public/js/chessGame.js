@@ -105,3 +105,9 @@ var cfg = {
 }
 
 board = ChessBoard('board', cfg)
+
+$(document).ready(function() {
+  $(".NewGameBtn").click(function() {
+    location.reload(true)
+  })
+})

@@ -1,3 +1,7 @@
+body {
+  font-family: 'Quicksand', sans-serif;
+}
+
 .board {
   width: 400px;
   margin: auto
@@ -11,6 +15,31 @@
 .move-history {
   max-height: 100px;
   overflow-y: scroll;
+}
+
+.NewGameBtn {
+  background-color: #f0d9b5;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 7px #404040;
+  color: black;
+  display: inline-block;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  outline: none;
+  padding: 8px 12px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.NewGameBtn:hover {
+  background-color: #aa9475;
+  color: white
+}
+
+.NewGameBtn:active {
+  box-shadow: 0 4px #000000;
+  transform: translateY(3px)
 }
 
 
