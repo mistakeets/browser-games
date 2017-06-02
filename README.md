@@ -60,7 +60,7 @@ Your work will be mainly in deciding how to replicate that formal logic and user
 
 - [x] [User stories](http://searchsoftwarequality.techtarget.com/definition/user-story) and features for the game are added as issues to your repo with the label `feature` or `user-story`
   <br>_You'll have to define these yourself by looking at the rules of the game and coming up with the right user stories & features_
-- [x] jQuery is used for DOM manipulation code
+- [ ] jQuery is used for DOM manipulation code
 - [x] Chess game can be found at `public/chess.html`
 - [ ] Chess game is playable by two people
 - [x] Pieces can only be moved according to the rules of chess
