@@ -4,14 +4,27 @@
 <head>
   <meta charset="utf-8">
   <title>Chess</title>
-  <script src="js/chessGame.js"></script>
-
+  <link rel="stylesheet" href="css/chessboard-0.3.0.css">
   <link rel="stylesheet" href="css/chessmain.css">
+  <script type="text/javascript" src="js/chess.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 
 <body>
+  <div id="board2" style="width: 400px"></div>
+  <input type="button" id="startBtn" value="Start" />
+  <input type="button" id="clearBtn" value="Clear" />
+  <script type="text/javascript">
+    var init = function() {
+      var board = ChessBoard('board2', 'start');
+    }
+    $(document).ready(init);
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.2/chess.js"></script>
+  </script>
+
+  <script src="js/chessboard-0.3.0.js"></script>
+  <script src="js/chessGame.js"></script>
+
 
 </body>
 
